@@ -1,150 +1,146 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card">
-  <h2>إضافة صنف</h2>
+<div class="layout">
+  <div class="card form-card">
+    <h2>إضافة صنف جديد</h2>
 
-  <form class="form" action="{{ url_for('add_item') }}" method="post" enctype="multipart/form-data">
-    <div class="grid">
+    <form class="form" action="{{ url_for('add_item') }}" method="post" enctype="multipart/form-data">
+      <div class="grid">
+        <div class="field">
+          <label>القسم</label>
+          <select name="section" required>
+            <option value="" disabled selected>اختار القسم</option>
+            {% for s in sections %}
+              <option value="{{ s }}">{{ s }}</option>
+            {% endfor %}
+          </select>
+        </div>
 
-      <div class="field">
-        <label>القسم</label>
-        <select name="section" required>
-          <option value="" disabled selected>اختار القسم</option>
-          {% for s in sections %}
-            <option value="{{ s }}">{{ s }}</option>
-          {% endfor %}
-        </select>
+        <div class="field">
+          <label>الموديل</label>
+          <select name="model" required>
+            <option value="" disabled selected>اختار الموديل</option>
+            {% for m in models %}
+              <option value="{{ m }}">{{ m }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="field">
+          <label>اسم الصنف</label>
+          <input name="item_name" placeholder="مثال: Compressor" required>
+        </div>
+
+        <div class="field">
+          <label>الكود</label>
+          <input name="code" placeholder="مثال: EO7010" required>
+        </div>
+
+        <div class="field">
+          <label>الكمية</label>
+          <input type="number" name="quantity" min="0" value="0" required>
+        </div>
+
+        <div class="field">
+          <label>الصورة</label>
+          <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp">
+        </div>
       </div>
 
-      <div class="field">
-        <label>الموديل</label>
-        <select name="model" required>
-          <option value="" disabled selected>اختار الموديل</option>
-          {% for m in models %}
-            <option value="{{ m }}">{{ m }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="field">
-        <label>اسم الصنف</label>
-        <input name="item_name" placeholder="مثال: كباس / شاسيه / موتور..." required>
-      </div>
-
-      <div class="field">
-        <label>الكود (Unique)</label>
-        <input name="code" placeholder="مثال: EO7010" required>
-      </div>
-
-      <div class="field">
-        <label>الكمية</label>
-        <input name="quantity" type="number" min="0" value="0" required>
-      </div>
-
-      <div class="field">
-        <label>الصورة</label>
-        <input type="file" name="image" accept=".png,.jpg,.jpeg,.webp">
-      </div>
-
-    </div>
-
-    <button class="btn primary" type="submit">حفظ</button>
-  </form>
-</div>
-
-
-<div class="card">
-  <div class="card-head">
-    <h2>بيانات الجرد</h2>
-    <div class="muted small">
-      {% if filters.q %}
-        بحث شغال: <b>{{ filters.q }}</b> — <a href="{{ url_for('index') }}">مسح</a>
-      {% else %}
-        <span>بدون بحث</span>
-      {% endif %}
-    </div>
+      <button class="btn primary full-btn" type="submit">حفظ الصنف</button>
+    </form>
   </div>
 
-  <div class="mobile-actions">
-    <a class="btn" href="{{ url_for('filter_page', q=filters.q or '') }}">افتح صفحة البحث</a>
-    <a class="btn" href="{{ url_for('export_png', q=filters.q or '') }}">تصدير PNG</a>
-  </div>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>القسم</th>
-          <th>الموديل</th>
-          <th>اسم الصنف</th>
-          <th>الكود</th>
-          <th>الكمية</th>
-          <th>تعديل كمية</th>
-          <th>الصورة</th>
-          <th>تاريخ الإضافة</th>
-          <th>حذف</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for it in items %}
-        <tr>
-          <td>{{ it.id }}</td>
-          <td>{{ it.section }}</td>
-          <td>{{ it.model }}</td>
-          <td>{{ it.item_name }}</td>
-          <td class="mono">{{ it.code }}</td>
-          <td><b>{{ it.quantity }}</b></td>
-
-          <td>
-            <div class="qty-box">
-              <!-- - -->
-              <form method="post" action="{{ url_for('update_qty', item_id=it.id, q=filters.q or '') }}">
-                <input type="hidden" name="action" value="dec">
-                <button class="btn qty-btn" type="submit">-</button>
-              </form>
-
-              <!-- + -->
-              <form method="post" action="{{ url_for('update_qty', item_id=it.id, q=filters.q or '') }}">
-                <input type="hidden" name="action" value="inc">
-                <button class="btn qty-btn" type="submit">+</button>
-              </form>
-
-              <!-- set -->
-              <form class="qty-set" method="post" action="{{ url_for('update_qty', item_id=it.id, q=filters.q or '') }}">
-                <input type="hidden" name="action" value="set">
-                <input name="value" type="number" min="0" value="{{ it.quantity }}">
-                <button class="btn" type="submit">تعيين</button>
-              </form>
-            </div>
-          </td>
-
-          <td>
-            {% if it.image_filename %}
-              <img class="thumb" src="{{ url_for('uploaded_file', filename=it.image_filename) }}" alt="img">
-            {% else %}
-              <span class="muted">—</span>
-            {% endif %}
-          </td>
-
-          <td class="muted">{{ it.created_at }}</td>
-
-          <td>
-            <form method="post" action="{{ url_for('delete_item', item_id=it.id, q=filters.q or '') }}">
-              <button class="btn danger" type="submit">حذف</button>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-
-        {% if not items %}
-        <tr>
-          <td colspan="10" class="muted center">مفيش بيانات مطابقة للبحث / أو مفيش بيانات لسه.</td>
-        </tr>
+  <div class="card">
+    <div class="card-head">
+      <h2>بيانات الجرد</h2>
+      <div class="muted small">
+        {% if q %}
+          نتيجة البحث: <b>{{ q }}</b> — <a href="{{ url_for('index') }}">مسح</a>
+        {% else %}
+          كل الأصناف
         {% endif %}
-      </tbody>
-    </table>
+      </div>
+    </div>
+
+    <div class="mobile-actions">
+      <a class="btn" href="{{ url_for('filter_page', q=q) }}">البحث</a>
+      <a class="btn" href="{{ url_for('export_png', q=q) }}">تصدير PNG</a>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>القسم</th>
+            <th>الموديل</th>
+            <th>اسم الصنف</th>
+            <th>الكود</th>
+            <th>الكمية</th>
+            <th>تعديل</th>
+            <th>الصورة</th>
+            <th>التاريخ</th>
+            <th>حذف</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for it in items %}
+          <tr>
+            <td>{{ it.id }}</td>
+            <td>{{ it.section }}</td>
+            <td>{{ it.model }}</td>
+            <td>{{ it.item_name }}</td>
+            <td class="mono">{{ it.code }}</td>
+            <td><b>{{ it.quantity }}</b></td>
+
+            <td>
+              <div class="qty-box">
+                <form method="post" action="{{ url_for('update_qty', item_id=it.id, q=q) }}">
+                  <input type="hidden" name="action" value="dec">
+                  <button class="btn qty-btn" type="submit">-</button>
+                </form>
+
+                <form method="post" action="{{ url_for('update_qty', item_id=it.id, q=q) }}">
+                  <input type="hidden" name="action" value="inc">
+                  <button class="btn qty-btn" type="submit">+</button>
+                </form>
+
+                <form class="qty-set" method="post" action="{{ url_for('update_qty', item_id=it.id, q=q) }}">
+                  <input type="hidden" name="action" value="set">
+                  <input name="value" type="number" min="0" value="{{ it.quantity }}">
+                  <button class="btn" type="submit">تعيين</button>
+                </form>
+              </div>
+            </td>
+
+            <td>
+              {% if it.image_filename %}
+                <img class="thumb" src="{{ url_for('uploaded_file', filename=it.image_filename) }}" alt="img">
+              {% else %}
+                <span class="muted">—</span>
+              {% endif %}
+            </td>
+
+            <td class="muted">{{ it.created_at }}</td>
+
+            <td>
+              <form method="post" action="{{ url_for('delete_item', item_id=it.id, q=q) }}">
+                <button class="btn danger" type="submit">حذف</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+
+          {% if not items %}
+          <tr>
+            <td colspan="10" class="center muted">مفيش بيانات لسه.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

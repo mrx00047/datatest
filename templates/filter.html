@@ -1,16 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="card">
+<div class="card search-card">
   <h2>بحث سريع</h2>
-  <p class="muted">ابحث بالكود أو اسم الصنف فقط.</p>
+  <p class="muted">ابحث بالكود أو اسم الصنف فقط</p>
 
   <form class="form" method="get" action="{{ url_for('index') }}">
-    <div class="grid">
-      <div class="field" style="grid-column: 1 / -1;">
-        <label>بحث (كود / اسم الصنف)</label>
-        <input name="q" value="{{ filters.q or '' }}" placeholder="مثال: EO7010 أو كباس">
-      </div>
+    <div class="field">
+      <label>البحث</label>
+      <input name="q" value="{{ q }}" placeholder="مثال: EO7010 أو Compressor">
     </div>
 
     <div class="row-actions">

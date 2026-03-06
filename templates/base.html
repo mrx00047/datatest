@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>نظام الجرد</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -11,11 +11,13 @@
     <div class="topbar">
       <div>
         <h1>نظام الجرد</h1>
-        <p class="muted">بحث بالكود/اسم الصنف + تعديل كمية</p>
+        <p class="muted">إدارة أصناف + صور + بحث + تعديل كمية</p>
       </div>
+
       <div class="actions">
-        <a class="btn" href="{{ url_for('filter_page', q=filters.q if filters else '') }}">صفحة البحث</a>
-        <a class="btn" href="{{ url_for('export_png', q=filters.q if filters else '') }}">تصدير PNG</a>
+        <a class="btn" href="{{ url_for('index') }}">الرئيسية</a>
+        <a class="btn" href="{{ url_for('filter_page', q=q if q is defined else '') }}">البحث</a>
+        <a class="btn" href="{{ url_for('export_png', q=q if q is defined else '') }}">تصدير PNG</a>
       </div>
     </div>
 
