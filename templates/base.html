@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>نظام الجرد</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div>
+        <h1>نظام الجرد</h1>
+        <p class="muted">بحث بالكود/اسم الصنف + تعديل كمية</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="{{ url_for('filter_page', q=filters.q if filters else '') }}">صفحة البحث</a>
+        <a class="btn" href="{{ url_for('export_png', q=filters.q if filters else '') }}">تصدير PNG</a>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-wrap">
+          {% for cat, msg in messages %}
+            <div class="flash {{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+  <h2>بحث سريع</h2>
+  <p class="muted">ابحث بالكود أو اسم الصنف فقط.</p>
+
+  <form class="form" method="get" action="{{ url_for('index') }}">
+    <div class="grid">
+      <div class="field" style="grid-column: 1 / -1;">
+        <label>بحث (كود / اسم الصنف)</label>
+        <input name="q" value="{{ filters.q or '' }}" placeholder="مثال: EO7010 أو كباس">
+      </div>
+    </div>
+
+    <div class="row-actions">
+      <button class="btn primary" type="submit">بحث</button>
+      <a class="btn" href="{{ url_for('filter_page') }}">مسح</a>
+      <a class="btn" href="{{ url_for('index') }}">رجوع</a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

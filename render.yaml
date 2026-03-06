@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: inventory-system
+    runtime: python
+    plan: starter   # مهم: علشان disk (free web مش بيدعم disk)
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -c gunicorn.conf.py app:app
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 10
